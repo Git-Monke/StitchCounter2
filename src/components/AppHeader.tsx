@@ -17,6 +17,39 @@ import {
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { HexColorPicker } from "react-colorful";
+
+const ColorPickerPopover = () => {
+  const { updateSelectedProject } = useProjects();
+  const selectedColor = useProjects(
+    (state) => state.projects[state.selectedProjectID]?.color ?? "#000000",
+  );
+
+  return (
+    <Popover modal>
+      <PopoverTrigger asChild>
+        <DropdownMenuItem
+          onSelect={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <PaintBucket className="mr-2" />
+          Change Color
+        </DropdownMenuItem>
+      </PopoverTrigger>
+      <PopoverContent className="flex">
+        <HexColorPicker
+          color={selectedColor}
+          onChange={(newHex) => {
+            updateSelectedProject("color", () => newHex);
+          }}
+          className="flex-1"
+        />
+      </PopoverContent>
+    </Popover>
+  );
+};
 
 export const AppHeader = () => {
   const { renameProject, deleteProject, selectedProjectID } = useProjects();
@@ -56,6 +89,7 @@ export const AppHeader = () => {
                   <ChevronDown></ChevronDown>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
+                  {/* Rename */}
                   <DropdownMenuItem
                     onClick={() => {
                       setRenamingProject(true);
@@ -65,11 +99,10 @@ export const AppHeader = () => {
                     Rename
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem>
-                    <PaintBucket></PaintBucket>
-                    Change Color
-                  </DropdownMenuItem>
+                  {/* Change Color */}
+                  <ColorPickerPopover />
 
+                  {/* Delete */}
                   <DropdownMenuItem
                     variant="destructive"
                     onClick={() => {
@@ -112,6 +145,7 @@ export const AppHeader = () => {
               >
                 <Check></Check>
               </Button>
+
               <Button variant="destructive" onClick={exitRename}>
                 <X></X>
               </Button>

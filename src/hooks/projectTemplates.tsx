@@ -200,16 +200,16 @@ export const templateProject: Project = {
   lastModified: Date.now(),
   options: {
     counterOptions: {
-      stitches: true,
-      rows: true,
+      stitches: false,
+      rows: false,
       repeats: true,
       time: true,
     },
     timerOptions: {
       remindTurnOn: false,
       autoTurnOff: false,
-      remindTurnOnDelay: 30,
-      autoTurnOffDelay: 60,
+      remindTurnOnDelay: 5,
+      autoTurnOffDelay: 5,
     },
   },
   data: {

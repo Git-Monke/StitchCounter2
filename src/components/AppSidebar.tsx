@@ -18,15 +18,12 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
 
-const SidebarBullet = ({
-  projectID,
-  project,
-}: {
-  projectID: string;
-  project: Project;
-}) => {
+const SidebarBullet = ({ projectID }: { projectID: string }) => {
   const { state } = useSidebar();
   const { selectedProjectID, setSelectedProjectID } = useProjects();
+
+  const projectName = useProjects((state) => state.projects[projectID].name);
+  const projectColor = useProjects((state) => state.projects[projectID].color);
 
   return (
     <AnimatePresence initial={false}>
@@ -50,9 +47,12 @@ const SidebarBullet = ({
               <div>
                 <div
                   className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: project.color }}
+                  style={{
+                    backgroundColor: projectColor,
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
+                  }}
                 />
-                <span>{project.name}</span>
+                <span>{projectName}</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -117,8 +117,8 @@ export const AppSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {recentProjects.length > 0 &&
-                recentProjects.map(([key, project]) => (
-                  <SidebarBullet projectID={key} project={project} key={key} />
+                recentProjects.map(([key, _]) => (
+                  <SidebarBullet projectID={key} key={key} />
                 ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -131,8 +131,8 @@ export const AppSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {oldProjects.length > 0 &&
-                oldProjects.map(([key, project]) => (
-                  <SidebarBullet projectID={key} project={project} key={key} />
+                oldProjects.map(([key, _]) => (
+                  <SidebarBullet projectID={key} key={key} />
                 ))}
             </SidebarMenu>
           </SidebarGroupContent>
