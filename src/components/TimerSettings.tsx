@@ -94,7 +94,13 @@ const TimerInput = ({
           setTempValue(value + "");
           setFocused(false);
         }}
+        onKeyDown={(e) => {
+          if (e.nativeEvent.key == "Enter") {
+            inputRef.current?.blur();
+          }
+        }}
       />
+      <Label htmlFor={prop}>Minutes</Label>
     </div>
   );
 };
@@ -104,7 +110,7 @@ export const TimerSettings = () => {
 
   return (
     <Card
-      className={`transition-all duration-200 ${!timerEnabled && "opacity-50"}`}
+      className={`transition-all duration-200 ${!timerEnabled && "opacity-50 pointer-events-none"}`}
     >
       <CardHeader>
         <CardTitle>Timer Settings</CardTitle>
@@ -115,8 +121,8 @@ export const TimerSettings = () => {
         <div className="grid grid-cols-2 gap-8">
           <TimerSwitch prop="remindTurnOn" title="Remind Turn-On" />
           <TimerSwitch prop="autoTurnOff" title="Auto Turn-Off" />
-          <TimerInput title="Delay: " prop={"remindTurnOnDelay"} />
-          <TimerInput title="Delay: " prop={"autoTurnOffDelay"} />
+          <TimerInput title="Wait" prop={"remindTurnOnDelay"} />
+          <TimerInput title="Wait" prop={"autoTurnOffDelay"} />
         </div>
       </CardContent>
     </Card>
