@@ -41,9 +41,9 @@
     --radius: 0.5rem;
     --background: oklch(0.9801 0.0034 67.78);
     --foreground: oklch(0.261 0.111 188.94);
-    --card: oklch(0.975 0.077 39.43);
+    --card: hsl(0 0 98%);
     --card-foreground: oklch(0.261 0.111 188.94);
-    --popover: oklch(0.975 0.077 39.43);
+    --popover: hsl(0 0 98%);
     --popover-foreground: oklch(0.261 0.111 188.94);
     --primary: oklch(0.847 0.217 33.89);
     --primary-foreground: oklch(0.986 0.015 17.38);
@@ -111,10 +111,10 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
     }
 }

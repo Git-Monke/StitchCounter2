@@ -66,11 +66,11 @@ export const AppSidebar = () => {
   const { projects, createNewProject } = useProjects();
 
   const recentProjects = Object.entries(projects)
-    .filter(([_, project]) => Date.now() - project.lastModified < ONE_WEEK)
+    .filter(([_key, project]) => Date.now() - project.lastModified < ONE_WEEK)
     .sort((a, b) => b[1].lastModified - a[1].lastModified);
 
   const oldProjects = Object.entries(projects)
-    .filter(([_, project]) => Date.now() - project.lastModified >= ONE_WEEK)
+    .filter(([_key, project]) => Date.now() - project.lastModified >= ONE_WEEK)
     .sort((a, b) => b[1].lastModified - a[1].lastModified);
 
   return (
