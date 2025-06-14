@@ -5,7 +5,7 @@ import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { ArrowLeft } from "lucide-react";
 import { AppHeader } from "./components/AppHeader";
-
+import { ProjectOverview } from "./components/ProjectOverview";
 import { CounterSettings } from "./components/CounterSettings";
 import { TimerSettings } from "./components/TimerSettings";
 
@@ -26,9 +26,17 @@ const AppContent = () => {
       )}
 
       {projectName != null && (
-        <div className="p-8 px-16 grid grid-rows-2 grid-cols-2 gap-8">
-          <CounterSettings />
-          <TimerSettings />
+        <div className="p-8 px-16 grid grid-rows-[auto_1fr] gap-8">
+          <div className="flex-1 flex flex-col gap-8">
+            <ProjectOverview />
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Project Settings
+            </h3>
+            <div className="grid grid-cols-2 gap-6">
+              <CounterSettings />
+              <TimerSettings />
+            </div>
+          </div>
         </div>
       )}
     </div>

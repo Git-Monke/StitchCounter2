@@ -5,25 +5,19 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
-import {
-  Check,
-  ChevronDown,
-  PaintBucket,
-  Pencil,
-  Trash,
-  X,
-} from "lucide-react";
+import { Check, Settings, PaintBucket, Pencil, Trash, X } from "lucide-react";
 
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { HexColorPicker } from "react-colorful";
+import { motion, useAnimation } from "framer-motion";
 
 const ColorPickerPopover = () => {
   const { updateSelectedProject } = useProjects();
   const selectedColor = useProjects(
-    (state) => state.projects[state.selectedProjectID]?.color ?? "#000000",
+    (state) => state.projects[state.selectedProjectID]?.color ?? "#000000"
   );
 
   return (
@@ -54,6 +48,9 @@ const ColorPickerPopover = () => {
 export const AppHeader = () => {
   const { renameProject, deleteProject, selectedProjectID } = useProjects();
   const projectName = useSelectedProjectName();
+  const projectColor = useProjects(
+    (state) => state.projects[state.selectedProjectID]?.color
+  );
 
   const [renamingProject, setRenamingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
@@ -68,7 +65,7 @@ export const AppHeader = () => {
   };
 
   const handleRename = () => {
-    if (!nameIsValid) {
+    if (!nameIsValid(newProjectName)) {
       return;
     }
 
@@ -80,42 +77,21 @@ export const AppHeader = () => {
   return (
     <>
       {projectName != null && (
-        <div className="h-16 flex items-end px-16 w-full">
+        <div className="h-16 flex items-end px-16 w-full justify-between">
           {!renamingProject && (
-            <div className="flex gap-2 items-center">
-              <span>{projectName || "No project selected"}</span>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <ChevronDown></ChevronDown>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {/* Rename */}
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setRenamingProject(true);
-                    }}
-                  >
-                    <Pencil></Pencil>
-                    Rename
-                  </DropdownMenuItem>
-
-                  {/* Change Color */}
-                  <ColorPickerPopover />
-
-                  {/* Delete */}
-                  <DropdownMenuItem
-                    variant="destructive"
-                    onClick={() => {
-                      deleteProject(selectedProjectID);
-                    }}
-                  >
-                    <Trash></Trash>
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <div className="flex items-center">
+              <div
+                className="w-3 h-3 rounded-full mr-3"
+                style={{
+                  backgroundColor: projectColor,
+                }}
+              />
+              <span className="mr-2">
+                {projectName || "No project selected"}
+              </span>
             </div>
           )}
+
           {renamingProject && (
             <div className="flex gap-2 items-center">
               <Input
@@ -150,6 +126,39 @@ export const AppHeader = () => {
                 <X></X>
               </Button>
             </div>
+          )}
+
+          {!renamingProject && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Settings className="w-5 h-5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                {/* Rename */}
+                <DropdownMenuItem
+                  onClick={() => {
+                    setRenamingProject(true);
+                  }}
+                >
+                  <Pencil></Pencil>
+                  Rename
+                </DropdownMenuItem>
+
+                {/* Change Color */}
+                <ColorPickerPopover />
+
+                {/* Delete */}
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => {
+                    deleteProject(selectedProjectID);
+                  }}
+                >
+                  <Trash></Trash>
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
       )}

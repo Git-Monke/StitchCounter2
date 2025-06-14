@@ -13,8 +13,10 @@ import {
   useSidebar,
 } from "./ui/sidebar";
 import { Separator } from "./ui/separator";
-import { PlusIcon, Search } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ProjectSearch } from "./ProjectSearch";
+import { useState } from "react";
 
 const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
 
@@ -64,6 +66,7 @@ const SidebarBullet = ({ projectID }: { projectID: string }) => {
 
 export const AppSidebar = () => {
   const { projects, createNewProject } = useProjects();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const recentProjects = Object.entries(projects)
     .filter(([_key, project]) => Date.now() - project.lastModified < ONE_WEEK)
@@ -72,6 +75,18 @@ export const AppSidebar = () => {
   const oldProjects = Object.entries(projects)
     .filter(([_key, project]) => Date.now() - project.lastModified >= ONE_WEEK)
     .sort((a, b) => b[1].lastModified - a[1].lastModified);
+
+  const filteredRecentProjects = searchQuery
+    ? recentProjects.filter(([_, project]) =>
+        project.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : recentProjects;
+
+  const filteredOldProjects = searchQuery
+    ? oldProjects.filter(([_, project]) =>
+        project.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : oldProjects;
 
   return (
     <Sidebar collapsible="icon">
@@ -100,12 +115,7 @@ export const AppSidebar = () => {
                   </div>
                 </SidebarMenuButton>
 
-                <SidebarMenuButton asChild>
-                  <div>
-                    <Search></Search>
-                    <span>Search Projects</span>
-                  </div>
-                </SidebarMenuButton>
+                <ProjectSearch onSearch={setSearchQuery} />
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
@@ -116,10 +126,24 @@ export const AppSidebar = () => {
           <SidebarGroupLabel>Recent Projects</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {recentProjects.length > 0 &&
-                recentProjects.map(([key, _]) => (
-                  <SidebarBullet projectID={key} key={key} />
-                ))}
+              <AnimatePresence mode="popLayout">
+                {filteredRecentProjects.length > 0 &&
+                  filteredRecentProjects.map(([key, _]) => (
+                    <motion.div
+                      key={key}
+                      layout
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{
+                        duration: 0.15,
+                        layout: { duration: 0.2 },
+                      }}
+                    >
+                      <SidebarBullet projectID={key} />
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -130,10 +154,24 @@ export const AppSidebar = () => {
 
           <SidebarGroupContent>
             <SidebarMenu>
-              {oldProjects.length > 0 &&
-                oldProjects.map(([key, _]) => (
-                  <SidebarBullet projectID={key} key={key} />
-                ))}
+              <AnimatePresence mode="popLayout">
+                {filteredOldProjects.length > 0 &&
+                  filteredOldProjects.map(([key, _]) => (
+                    <motion.div
+                      key={key}
+                      layout
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{
+                        duration: 0.15,
+                        layout: { duration: 0.2 },
+                      }}
+                    >
+                      <SidebarBullet projectID={key} />
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

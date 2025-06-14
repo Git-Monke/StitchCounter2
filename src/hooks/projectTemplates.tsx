@@ -1,197 +1,521 @@
 import { type Project } from "./useProjects";
 
-// A. Example projects
-export const exampleProjects: Record<string, Project> = {
-  "baby-blanket-2024": {
-    name: "Baby Blanket",
-    color: "#FFB6C1",
-    lastModified: Date.now() - 2 * 24 * 60 * 60 * 1000, // 2 days ago
+// Helper function to generate random project data
+function generateProject(
+  name: string,
+  color: string,
+  sectionsData: Array<{
+    name: string;
+    notes: string[];
+    stitches: number;
+    rows: number;
+    repeats: number;
+    time: number;
+  }>
+): Project {
+  const sections: Record<string, any> = {};
+
+  sectionsData.forEach((section, index) => {
+    sections[`section_${index + 1}`] = {
+      name: section.name,
+      notes: section.notes,
+      data: {
+        stitches: section.stitches,
+        rows: section.rows,
+        repeats: section.repeats,
+        time: section.time,
+      },
+    };
+  });
+
+  return {
+    name,
+    color,
+    lastModified:
+      Date.now() - Math.floor(Math.random() * 90 * 24 * 60 * 60 * 1000), // Random within last 90 days
     options: {
       counterOptions: {
-        stitches: true,
-        rows: true,
-        repeats: true,
-        time: false,
+        stitches: Math.random() > 0.2,
+        rows: Math.random() > 0.1,
+        repeats: Math.random() > 0.4,
+        time: Math.random() > 0.3,
       },
       timerOptions: {
-        remindTurnOn: true,
-        autoTurnOff: false,
-        remindTurnOnDelay: 30,
-        autoTurnOffDelay: 0,
+        remindTurnOn: Math.random() > 0.5,
+        autoTurnOff: Math.random() > 0.6,
+        remindTurnOnDelay: Math.floor(Math.random() * 15) + 5,
+        autoTurnOffDelay: Math.floor(Math.random() * 25) + 10,
       },
     },
-    data: {
-      sections: {
-        border: {
-          name: "Border",
-          notes: ["Use single crochet", "Keep tension loose"],
-          data: {
-            stitches: 240,
-            rows: 8,
-            repeats: 0,
-            time: 180, // 3 hours in minutes
-          },
-        },
-        "main-pattern": {
-          name: "Main Pattern",
-          notes: ["Repeat chevron pattern", "Count carefully on row 1"],
-          data: {
-            stitches: 1440,
-            rows: 32,
-            repeats: 16,
-            time: 720, // 12 hours in minutes
-          },
-        },
-      },
-    },
-  },
+    data: { sections },
+  };
+}
 
-  "winter-scarf": {
+// Project templates data
+const projectTemplates = [
+  {
+    name: "Cozy Baby Blanket",
+    color: "#FFB6C1",
+    sections: [
+      {
+        name: "Border",
+        notes: ["Use single crochet", "Change yarn every 4 rows"],
+        stitches: 120,
+        rows: 8,
+        repeats: 1,
+        time: 45,
+      },
+      {
+        name: "Main Pattern",
+        notes: ["Chevron stitch pattern", "Keep tension even"],
+        stitches: 480,
+        rows: 32,
+        repeats: 8,
+        time: 180,
+      },
+      {
+        name: "Final Border",
+        notes: ["Mirror starting border", "Weave in ends"],
+        stitches: 120,
+        rows: 8,
+        repeats: 1,
+        time: 45,
+      },
+    ],
+  },
+  {
     name: "Winter Scarf",
     color: "#4682B4",
-    lastModified: Date.now() - 5 * 24 * 60 * 60 * 1000, // 5 days ago
-    options: {
-      counterOptions: {
-        stitches: true,
-        rows: true,
-        repeats: false,
-        time: true,
+    sections: [
+      {
+        name: "Cable Pattern",
+        notes: ["Use cable needle", "Cross every 6 rows"],
+        stitches: 240,
+        rows: 60,
+        repeats: 10,
+        time: 120,
       },
-      timerOptions: {
-        remindTurnOn: false,
-        autoTurnOff: true,
-        remindTurnOnDelay: 0,
-        autoTurnOffDelay: 60,
+      {
+        name: "Fringe",
+        notes: ["6-inch strands", "Every other stitch"],
+        stitches: 40,
+        rows: 2,
+        repeats: 2,
+        time: 30,
       },
-    },
-    data: {
-      sections: {
-        ribbing: {
-          name: "Ribbing",
-          notes: ["K2, P2 pattern", "Cast on with long-tail method"],
-          data: {
-            stitches: 96,
-            rows: 6,
-            repeats: 0,
-            time: 45,
-          },
-        },
-        body: {
-          name: "Body",
-          notes: ["Stockinette stitch", "Check gauge every 20 rows"],
-          data: {
-            stitches: 2400,
-            rows: 150,
-            repeats: 0,
-            time: 900, // 15 hours
-          },
-        },
-        fringe: {
-          name: "Fringe",
-          notes: ["Cut 8-inch strands", "Attach every 4th stitch"],
-          data: {
-            stitches: 48,
-            rows: 0,
-            repeats: 24,
-            time: 60,
-          },
-        },
-      },
-    },
+    ],
   },
-
-  "dishcloth-set": {
-    name: "Kitchen Dishcloth Set",
+  {
+    name: "Autumn Cardigan",
+    color: "#DEB887",
+    sections: [
+      {
+        name: "Back Panel",
+        notes: ["Ribbing first", "Armhole increases at row 45"],
+        stitches: 320,
+        rows: 65,
+        repeats: 1,
+        time: 200,
+      },
+      {
+        name: "Front Left",
+        notes: ["Button band", "Shape neckline"],
+        stitches: 160,
+        rows: 65,
+        repeats: 1,
+        time: 120,
+      },
+      {
+        name: "Front Right",
+        notes: ["Buttonhole band", "Match left panel"],
+        stitches: 160,
+        rows: 65,
+        repeats: 1,
+        time: 120,
+      },
+      {
+        name: "Sleeves",
+        notes: ["Taper from cuff", "Set in carefully"],
+        stitches: 180,
+        rows: 45,
+        repeats: 2,
+        time: 90,
+      },
+    ],
+  },
+  {
+    name: "Granny Square Afghan",
+    color: "#9370DB",
+    sections: [
+      {
+        name: "Individual Squares",
+        notes: ["Make 64 squares", "Consistent tension"],
+        stitches: 24,
+        rows: 4,
+        repeats: 64,
+        time: 15,
+      },
+      {
+        name: "Assembly",
+        notes: ["Join with slip stitch", "Work in rows"],
+        stitches: 192,
+        rows: 16,
+        repeats: 1,
+        time: 90,
+      },
+      {
+        name: "Border",
+        notes: ["Three rounds", "Corner increases"],
+        stitches: 256,
+        rows: 3,
+        repeats: 1,
+        time: 45,
+      },
+    ],
+  },
+  {
+    name: "Lace Doily",
+    color: "#F0F8FF",
+    sections: [
+      {
+        name: "Center Ring",
+        notes: ["Magic ring start", "12 dc in ring"],
+        stitches: 12,
+        rows: 1,
+        repeats: 1,
+        time: 5,
+      },
+      {
+        name: "Petal Rounds",
+        notes: ["Increase pattern", "Chain spaces"],
+        stitches: 144,
+        rows: 8,
+        repeats: 1,
+        time: 60,
+      },
+      {
+        name: "Outer Edge",
+        notes: ["Picot edging", "Block when finished"],
+        stitches: 288,
+        rows: 4,
+        repeats: 1,
+        time: 40,
+      },
+    ],
+  },
+  {
+    name: "Chunky Throw Pillow",
+    color: "#CD853F",
+    sections: [
+      {
+        name: "Front Panel",
+        notes: ["Textured stitch", "18x18 inches"],
+        stitches: 144,
+        rows: 36,
+        repeats: 1,
+        time: 80,
+      },
+      {
+        name: "Back Panel",
+        notes: ["Plain single crochet", "Match front size"],
+        stitches: 144,
+        rows: 36,
+        repeats: 1,
+        time: 60,
+      },
+      {
+        name: "Assembly",
+        notes: ["Invisible seam", "Leave opening for stuffing"],
+        stitches: 72,
+        rows: 3,
+        repeats: 1,
+        time: 25,
+      },
+    ],
+  },
+  {
+    name: "Market Bag",
+    color: "#228B22",
+    sections: [
+      {
+        name: "Base",
+        notes: ["Oval shape", "Work in rounds"],
+        stitches: 48,
+        rows: 8,
+        repeats: 1,
+        time: 30,
+      },
+      {
+        name: "Sides",
+        notes: ["Mesh pattern", "Expandable design"],
+        stitches: 96,
+        rows: 20,
+        repeats: 1,
+        time: 45,
+      },
+      {
+        name: "Handles",
+        notes: ["Reinforced straps", "Comfortable grip"],
+        stitches: 60,
+        rows: 4,
+        repeats: 2,
+        time: 20,
+      },
+    ],
+  },
+  {
+    name: "Baby Booties Set",
+    color: "#FFE4E1",
+    sections: [
+      {
+        name: "Sole",
+        notes: ["Oval base", "Size 0-3 months"],
+        stitches: 28,
+        rows: 6,
+        repeats: 2,
+        time: 15,
+      },
+      {
+        name: "Upper",
+        notes: ["Shape around sole", "Cute bow detail"],
+        stitches: 40,
+        rows: 8,
+        repeats: 2,
+        time: 20,
+      },
+      {
+        name: "Ties",
+        notes: ["I-cord technique", "6 inches long"],
+        stitches: 36,
+        rows: 1,
+        repeats: 4,
+        time: 10,
+      },
+    ],
+  },
+  {
+    name: "Kitchen Dishcloths",
+    color: "#F5DEB3",
+    sections: [
+      {
+        name: "Main Square",
+        notes: ["Cotton yarn only", "Tight gauge"],
+        stitches: 100,
+        rows: 25,
+        repeats: 6,
+        time: 20,
+      },
+      {
+        name: "Hanging Loop",
+        notes: ["Chain 12", "Attach to corner"],
+        stitches: 12,
+        rows: 1,
+        repeats: 6,
+        time: 2,
+      },
+    ],
+  },
+  {
+    name: "Amigurumi Bear",
+    color: "#DEB887",
+    sections: [
+      {
+        name: "Head",
+        notes: ["Start with magic ring", "Stuff firmly"],
+        stitches: 72,
+        rows: 12,
+        repeats: 1,
+        time: 35,
+      },
+      {
+        name: "Body",
+        notes: ["Oval shape", "Leave opening for stuffing"],
+        stitches: 84,
+        rows: 14,
+        repeats: 1,
+        time: 40,
+      },
+      {
+        name: "Arms",
+        notes: ["Cylinder shape", "Stuff lightly"],
+        stitches: 36,
+        rows: 8,
+        repeats: 2,
+        time: 15,
+      },
+      {
+        name: "Legs",
+        notes: ["Cone shape", "Stuff for stability"],
+        stitches: 42,
+        rows: 10,
+        repeats: 2,
+        time: 20,
+      },
+      {
+        name: "Ears",
+        notes: ["Small circles", "Attach securely"],
+        stitches: 12,
+        rows: 3,
+        repeats: 2,
+        time: 5,
+      },
+    ],
+  },
+  {
+    name: "Chevron Baby Blanket",
     color: "#98FB98",
-    lastModified: Date.now() - 1 * 24 * 60 * 60 * 1000, // 1 day ago
-    options: {
-      counterOptions: {
-        stitches: false,
-        rows: true,
-        repeats: true,
-        time: false,
+    sections: [
+      {
+        name: "Chevron Pattern",
+        notes: ["Color changes every 2 rows", "Point precision"],
+        stitches: 360,
+        rows: 80,
+        repeats: 1,
+        time: 240,
       },
-      timerOptions: {
-        remindTurnOn: true,
-        autoTurnOff: true,
-        remindTurnOnDelay: 15,
-        autoTurnOffDelay: 45,
+      {
+        name: "Border",
+        notes: ["Single crochet edge", "Corner adjustments"],
+        stitches: 200,
+        rows: 3,
+        repeats: 1,
+        time: 30,
       },
-    },
-    data: {
-      sections: {
-        "dishcloth-1": {
-          name: "Dishcloth #1",
-          notes: ["Seed stitch pattern", "Cotton yarn only"],
-          data: {
-            stitches: 900,
-            rows: 30,
-            repeats: 0,
-            time: 120,
-          },
-        },
-        "dishcloth-2": {
-          name: "Dishcloth #2",
-          notes: ["Diagonal pattern", "Same size as #1"],
-          data: {
-            stitches: 465,
-            rows: 30,
-            repeats: 15,
-            time: 90,
-          },
-        },
-      },
-    },
+    ],
   },
+  {
+    name: "Mesh Beach Bag",
+    color: "#20B2AA",
+    sections: [
+      {
+        name: "Bottom",
+        notes: ["Circular base", "Sturdy foundation"],
+        stitches: 60,
+        rows: 10,
+        repeats: 1,
+        time: 25,
+      },
+      {
+        name: "Mesh Body",
+        notes: ["Open weave", "Drainage holes"],
+        stitches: 120,
+        rows: 25,
+        repeats: 1,
+        time: 50,
+      },
+      {
+        name: "Reinforced Rim",
+        notes: ["Double crochet band", "Handle attachment"],
+        stitches: 60,
+        rows: 2,
+        repeats: 1,
+        time: 15,
+      },
+      {
+        name: "Handles",
+        notes: ["Braided rope style", "Extra strength"],
+        stitches: 150,
+        rows: 1,
+        repeats: 2,
+        time: 30,
+      },
+    ],
+  },
+  {
+    name: "Flower Motif Shawl",
+    color: "#DA70D6",
+    sections: [
+      {
+        name: "Center Flowers",
+        notes: ["Make 12 motifs", "Join as you go"],
+        stitches: 48,
+        rows: 6,
+        repeats: 12,
+        time: 25,
+      },
+      {
+        name: "Connecting Mesh",
+        notes: ["Fill between flowers", "Maintain drape"],
+        stitches: 144,
+        rows: 12,
+        repeats: 1,
+        time: 60,
+      },
+      {
+        name: "Lace Edge",
+        notes: ["Scalloped border", "Block for best shape"],
+        stitches: 240,
+        rows: 4,
+        repeats: 1,
+        time: 45,
+      },
+    ],
+  },
+  {
+    name: "Coaster Set",
+    color: "#F4A460",
+    sections: [
+      {
+        name: "Round Coasters",
+        notes: ["4-inch diameter", "Absorbent cotton"],
+        stitches: 48,
+        rows: 8,
+        repeats: 6,
+        time: 12,
+      },
+      {
+        name: "Storage Basket",
+        notes: ["Holds complete set", "Matching color"],
+        stitches: 96,
+        rows: 12,
+        repeats: 1,
+        time: 35,
+      },
+    ],
+  },
+  {
+    name: "Cable Knit Style Blanket",
+    color: "#F5F5DC",
+    sections: [
+      {
+        name: "Cable Panels",
+        notes: ["Faux cable technique", "Consistent crosses"],
+        stitches: 200,
+        rows: 40,
+        repeats: 5,
+        time: 80,
+      },
+      {
+        name: "Plain Sections",
+        notes: ["Single crochet fill", "Even tension"],
+        stitches: 160,
+        rows: 40,
+        repeats: 4,
+        time: 50,
+      },
+      {
+        name: "Ribbed Border",
+        notes: ["Post stitch ribbing", "All around edge"],
+        stitches: 280,
+        rows: 6,
+        repeats: 1,
+        time: 40,
+      },
+    ],
+  },
+];
 
-  "lace-shawl": {
-    name: "Evening Lace Shawl",
-    color: "#DDA0DD",
-    lastModified: Date.now() - 10 * 24 * 60 * 60 * 1000, // 10 days ago
-    options: {
-      counterOptions: {
-        stitches: true,
-        rows: true,
-        repeats: true,
-        time: true,
-      },
-      timerOptions: {
-        remindTurnOn: true,
-        autoTurnOff: false,
-        remindTurnOnDelay: 20,
-        autoTurnOffDelay: 0,
-      },
-    },
-    data: {
-      sections: {
-        "center-panel": {
-          name: "Center Panel",
-          notes: [
-            "Follow chart carefully",
-            "Use stitch markers",
-            "Block heavily when finished",
-          ],
-          data: {
-            stitches: 2800,
-            rows: 140,
-            repeats: 35,
-            time: 1200, // 20 hours
-          },
-        },
-        border: {
-          name: "Lace Border",
-          notes: ["Pick up stitches evenly", "Work border chart 3 times"],
-          data: {
-            stitches: 720,
-            rows: 24,
-            repeats: 3,
-            time: 360, // 6 hours
-          },
-        },
-      },
-    },
-  },
-};
+export const exampleProjects: Record<string, Project> = {};
+
+// Generate 15 projects using the templates
+projectTemplates.slice(0, 15).forEach((template, index) => {
+  const id = `project_${String(index + 1).padStart(3, "0")}`;
+  exampleProjects[id] = generateProject(
+    template.name,
+    template.color,
+    template.sections
+  );
+});
 
 // B. Template project
 export const templateProject: Project = {
