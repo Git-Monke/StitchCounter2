@@ -186,11 +186,35 @@ export const SectionTimer: React.FC = () => {
     }
   };
 
-  // Update timer every second if running
+  // Update timer every second if running, and save to Zustand/localStorage
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
         setTick((t) => t + 1);
+
+        // Save elapsed time to Zustand/localStorage every second
+        if (selectedSectionID && project) {
+          const elapsed =
+            runningTimerElapsed +
+            Math.floor((Date.now() - (runningTimerStart || 0)) / 1000);
+          updateSelectedProject("data", (data) => {
+            const section = data.sections[selectedSectionID];
+            if (!section) return data;
+            return {
+              ...data,
+              sections: {
+                ...data.sections,
+                [selectedSectionID]: {
+                  ...section,
+                  data: {
+                    ...section.data,
+                    time: elapsed,
+                  },
+                },
+              },
+            };
+          });
+        }
       }, 1000);
     } else if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -202,7 +226,7 @@ export const SectionTimer: React.FC = () => {
         intervalRef.current = null;
       }
     };
-  }, [isRunning, selectedSectionID]);
+  }, [isRunning, selectedSectionID, project, updateSelectedProject]);
 
   // If section changes, stop timer if it was running
   useEffect(() => {

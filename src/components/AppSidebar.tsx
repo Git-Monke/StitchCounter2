@@ -69,21 +69,21 @@ export const AppSidebar = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const recentProjects = Object.entries(projects)
-    .filter(([_key, project]) => Date.now() - project.lastModified < ONE_WEEK)
+    .filter(([, project]) => Date.now() - project.lastModified < ONE_WEEK)
     .sort((a, b) => b[1].lastModified - a[1].lastModified);
 
   const oldProjects = Object.entries(projects)
-    .filter(([_key, project]) => Date.now() - project.lastModified >= ONE_WEEK)
+    .filter(([, project]) => Date.now() - project.lastModified >= ONE_WEEK)
     .sort((a, b) => b[1].lastModified - a[1].lastModified);
 
   const filteredRecentProjects = searchQuery
-    ? recentProjects.filter(([_, project]) =>
+    ? recentProjects.filter(([, project]) =>
         project.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : recentProjects;
 
   const filteredOldProjects = searchQuery
-    ? oldProjects.filter(([_, project]) =>
+    ? oldProjects.filter(([, project]) =>
         project.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : oldProjects;
@@ -128,7 +128,7 @@ export const AppSidebar = () => {
             <SidebarMenu>
               <AnimatePresence mode="popLayout">
                 {filteredRecentProjects.length > 0 &&
-                  filteredRecentProjects.map(([key, _]) => (
+                  filteredRecentProjects.map(([key]) => (
                     <motion.div
                       key={key}
                       layout
@@ -156,7 +156,7 @@ export const AppSidebar = () => {
             <SidebarMenu>
               <AnimatePresence mode="popLayout">
                 {filteredOldProjects.length > 0 &&
-                  filteredOldProjects.map(([key, _]) => (
+                  filteredOldProjects.map(([key]) => (
                     <motion.div
                       key={key}
                       layout

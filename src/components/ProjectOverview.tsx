@@ -1,6 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useSelectedProject } from "../hooks/useProjects";
 import { formatDistanceToNow } from "date-fns";
+import ReactMarkdown from "react-markdown";
+
+interface StatCardProps {
+  label: string;
+  value: string | number;
+}
+
+function StatCard({ label, value }: StatCardProps) {
+  return (
+    <div className="flex flex-col p-3 rounded-lg bg-primary/5 border border-primary/10">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-lg font-medium">{value}</span>
+    </div>
+  );
+}
 
 export function ProjectOverview() {
   const project = useSelectedProject();
@@ -15,19 +30,22 @@ export function ProjectOverview() {
       repeats: acc.repeats + section.data.repeats,
       time: acc.time + section.data.time,
     }),
-    { stitches: 0, rows: 0, repeats: 0, time: 0 }
+    { stitches: 0, rows: 0, repeats: 0, time: 0 },
   );
 
-  // Collect all notes from all sections
-  const allNotes = Object.values(project.data.sections).flatMap(
-    (section) => section.notes
-  );
+  // No need to collect all notes; each section now has a single markdown string
 
-  // Format time in hours and minutes
-  const formatTime = (minutes: number) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
+  // Format time in spoken form (e.g., 2 hours, 43 minutes, 16 seconds)
+  const formatTime = (seconds: number) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    const parts = [];
+    if (h > 0) parts.push(`${h} hour${h !== 1 ? "s" : ""}`);
+    if (m > 0) parts.push(`${m} minute${m !== 1 ? "s" : ""}`);
+    if (s > 0 || parts.length === 0)
+      parts.push(`${s} second${s !== 1 ? "s" : ""}`);
+    return parts.join(", ");
   };
 
   return (
@@ -61,60 +79,43 @@ export function ProjectOverview() {
               Project Totals
             </h3>
             <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col p-3 rounded-lg bg-primary/5 border border-primary/10">
-                <span className="text-xs text-muted-foreground">Stitches</span>
-                <span className="text-lg font-medium">
-                  {totals.stitches.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex flex-col p-3 rounded-lg bg-primary/5 border border-primary/10">
-                <span className="text-xs text-muted-foreground">Rows</span>
-                <span className="text-lg font-medium">
-                  {totals.rows.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex flex-col p-3 rounded-lg bg-primary/5 border border-primary/10">
-                <span className="text-xs text-muted-foreground">Repeats</span>
-                <span className="text-lg font-medium">
-                  {totals.repeats.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex flex-col p-3 rounded-lg bg-primary/5 border border-primary/10">
-                <span className="text-xs text-muted-foreground">Time</span>
-                <span className="text-lg font-medium">
-                  {formatTime(totals.time)}
-                </span>
-              </div>
+              <StatCard
+                label="Stitches"
+                value={totals.stitches.toLocaleString()}
+              />
+              <StatCard label="Rows" value={totals.rows.toLocaleString()} />
+              <StatCard
+                label="Repeats"
+                value={totals.repeats.toLocaleString()}
+              />
+              <StatCard label="Time" value={formatTime(totals.time)} />
             </div>
           </div>
 
-          {allNotes.length > 0 && (
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">
-                Notes
-              </h3>
-              <div className="grid grid-cols-2 gap-3">
-                {Object.entries(project.data.sections).map(
-                  ([_, section]) =>
-                    section.notes.length > 0 && (
-                      <div
-                        key={section.name}
-                        className="flex flex-col p-3 rounded-lg bg-primary/5 border border-primary/10"
-                      >
-                        <span className="text-xs text-muted-foreground mb-2">
-                          {section.name}
-                        </span>
-                        <ul className="space-y-1 list-disc list-inside text-sm pl-2">
-                          {section.notes.map((note, index) => (
-                            <li key={index}>{note}</li>
-                          ))}
-                        </ul>
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">
+              Notes
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              {Object.entries(project.data.sections).map(
+                ([, section]) =>
+                  section.notes &&
+                  section.notes.trim() !== "" && (
+                    <div
+                      key={section.name}
+                      className="flex flex-col p-3 rounded-lg bg-primary/5 border border-primary/10"
+                    >
+                      <span className="text-xs text-muted-foreground mb-2">
+                        {section.name}
+                      </span>
+                      <div className="text-sm">
+                        <ReactMarkdown>{section.notes}</ReactMarkdown>
                       </div>
-                    )
-                )}
-              </div>
+                    </div>
+                  ),
+              )}
             </div>
-          )}
+          </div>
         </div>
       </CardContent>
     </Card>

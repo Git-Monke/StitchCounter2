@@ -11,7 +11,7 @@ interface StitchTypes {
 
 interface Section {
   name: string;
-  notes: string[];
+  notes: string; // markdown string
   data: StitchTypes;
 }
 
@@ -71,7 +71,7 @@ const randomID = () => Math.random().toString(36).slice(2, 11);
 export const useProjects = create<ProjectStore>()(
   subscribeWithSelector(
     persist(
-      (set, get) => ({
+      (set) => ({
         // Initial state
         projects: exampleProjects,
         selectedProjectID: "",
@@ -120,7 +120,7 @@ export const useProjects = create<ProjectStore>()(
             const newSectionID = Math.random().toString(36).slice(2, 11);
             const newSection = {
               name: "Untitled Section",
-              notes: [],
+              notes: "",
               data: {
                 stitches: 0,
                 rows: 0,
@@ -238,6 +238,22 @@ export const useProjects = create<ProjectStore>()(
     ),
   ),
 );
+
+// --- Cross-window sync: listen for storage and message events and rehydrate store ---
+if (typeof window !== "undefined") {
+  const rehydrate = () => {
+    if (typeof useProjects.persist?.rehydrate === "function") {
+      useProjects.persist.rehydrate();
+    }
+  };
+
+  window.addEventListener("storage", rehydrate);
+  window.addEventListener("message", (event) => {
+    if (event.data === "stitch-counter-sync") {
+      rehydrate();
+    }
+  });
+}
 
 // Selector helpers
 export const useSelectedProject = () =>

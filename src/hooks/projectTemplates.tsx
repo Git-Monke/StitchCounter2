@@ -6,7 +6,7 @@ function generateProject(
   color: string,
   sectionsData: Array<{
     name: string;
-    notes: string[];
+    notes: string;
     stitches: number;
     rows: number;
     repeats: number;
@@ -60,7 +60,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Border",
-        notes: ["Use single crochet", "Change yarn every 4 rows"],
+        notes: "- Use single crochet\n- Change yarn every 4 rows",
         stitches: 120,
         rows: 8,
         repeats: 1,
@@ -68,7 +68,7 @@ const projectTemplates = [
       },
       {
         name: "Main Pattern",
-        notes: ["Chevron stitch pattern", "Keep tension even"],
+        notes: "- Chevron stitch pattern\n- Keep tension even",
         stitches: 480,
         rows: 32,
         repeats: 8,
@@ -76,7 +76,7 @@ const projectTemplates = [
       },
       {
         name: "Final Border",
-        notes: ["Mirror starting border", "Weave in ends"],
+        notes: "- Mirror starting border\n- Weave in ends",
         stitches: 120,
         rows: 8,
         repeats: 1,
@@ -90,7 +90,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Cable Pattern",
-        notes: ["Use cable needle", "Cross every 6 rows"],
+        notes: "- Use cable needle\n- Cross every 6 rows",
         stitches: 240,
         rows: 60,
         repeats: 10,
@@ -98,7 +98,7 @@ const projectTemplates = [
       },
       {
         name: "Fringe",
-        notes: ["6-inch strands", "Every other stitch"],
+        notes: "- 6-inch strands\n- Every other stitch",
         stitches: 40,
         rows: 2,
         repeats: 2,
@@ -112,7 +112,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Back Panel",
-        notes: ["Ribbing first", "Armhole increases at row 45"],
+        notes: "- Ribbing first\n- Armhole increases at row 45",
         stitches: 320,
         rows: 65,
         repeats: 1,
@@ -120,7 +120,7 @@ const projectTemplates = [
       },
       {
         name: "Front Left",
-        notes: ["Button band", "Shape neckline"],
+        notes: "- Button band\n- Shape neckline",
         stitches: 160,
         rows: 65,
         repeats: 1,
@@ -128,7 +128,7 @@ const projectTemplates = [
       },
       {
         name: "Front Right",
-        notes: ["Buttonhole band", "Match left panel"],
+        notes: "- Buttonhole band\n- Match left panel",
         stitches: 160,
         rows: 65,
         repeats: 1,
@@ -136,7 +136,7 @@ const projectTemplates = [
       },
       {
         name: "Sleeves",
-        notes: ["Taper from cuff", "Set in carefully"],
+        notes: "- Taper from cuff\n- Set in carefully",
         stitches: 180,
         rows: 45,
         repeats: 2,
@@ -150,7 +150,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Individual Squares",
-        notes: ["Make 64 squares", "Consistent tension"],
+        notes: "- Make 64 squares\n- Consistent tension",
         stitches: 24,
         rows: 4,
         repeats: 64,
@@ -158,7 +158,7 @@ const projectTemplates = [
       },
       {
         name: "Assembly",
-        notes: ["Join with slip stitch", "Work in rows"],
+        notes: "- Join with slip stitch\n- Work in rows",
         stitches: 192,
         rows: 16,
         repeats: 1,
@@ -166,7 +166,7 @@ const projectTemplates = [
       },
       {
         name: "Border",
-        notes: ["Three rounds", "Corner increases"],
+        notes: "- Three rounds\n- Corner increases",
         stitches: 256,
         rows: 3,
         repeats: 1,
@@ -180,7 +180,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Center Ring",
-        notes: ["Magic ring start", "12 dc in ring"],
+        notes: "- Magic ring start\n- 12 dc in ring",
         stitches: 12,
         rows: 1,
         repeats: 1,
@@ -188,7 +188,7 @@ const projectTemplates = [
       },
       {
         name: "Petal Rounds",
-        notes: ["Increase pattern", "Chain spaces"],
+        notes: "- Increase pattern\n- Chain spaces",
         stitches: 144,
         rows: 8,
         repeats: 1,
@@ -196,7 +196,7 @@ const projectTemplates = [
       },
       {
         name: "Outer Edge",
-        notes: ["Picot edging", "Block when finished"],
+        notes: "- Picot edging\n- Block when finished",
         stitches: 288,
         rows: 4,
         repeats: 1,
@@ -210,7 +210,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Front Panel",
-        notes: ["Textured stitch", "18x18 inches"],
+        notes: "- Textured stitch\n- 18x18 inches",
         stitches: 144,
         rows: 36,
         repeats: 1,
@@ -218,7 +218,7 @@ const projectTemplates = [
       },
       {
         name: "Back Panel",
-        notes: ["Plain single crochet", "Match front size"],
+        notes: "- Plain single crochet\n- Match front size",
         stitches: 144,
         rows: 36,
         repeats: 1,
@@ -226,7 +226,7 @@ const projectTemplates = [
       },
       {
         name: "Assembly",
-        notes: ["Invisible seam", "Leave opening for stuffing"],
+        notes: "- Invisible seam\n- Leave opening for stuffing",
         stitches: 72,
         rows: 3,
         repeats: 1,
@@ -240,7 +240,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Base",
-        notes: ["Oval shape", "Work in rounds"],
+        notes: "- Oval shape\n- Work in rounds",
         stitches: 48,
         rows: 8,
         repeats: 1,
@@ -248,7 +248,7 @@ const projectTemplates = [
       },
       {
         name: "Sides",
-        notes: ["Mesh pattern", "Expandable design"],
+        notes: "- Mesh pattern\n- Expandable design",
         stitches: 96,
         rows: 20,
         repeats: 1,
@@ -256,7 +256,7 @@ const projectTemplates = [
       },
       {
         name: "Handles",
-        notes: ["Reinforced straps", "Comfortable grip"],
+        notes: "- Reinforced straps\n- Comfortable grip",
         stitches: 60,
         rows: 4,
         repeats: 2,
@@ -270,7 +270,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Sole",
-        notes: ["Oval base", "Size 0-3 months"],
+        notes: "- Oval base\n- Size 0-3 months",
         stitches: 28,
         rows: 6,
         repeats: 2,
@@ -278,7 +278,7 @@ const projectTemplates = [
       },
       {
         name: "Upper",
-        notes: ["Shape around sole", "Cute bow detail"],
+        notes: "- Shape around sole\n- Cute bow detail",
         stitches: 40,
         rows: 8,
         repeats: 2,
@@ -286,7 +286,7 @@ const projectTemplates = [
       },
       {
         name: "Ties",
-        notes: ["I-cord technique", "6 inches long"],
+        notes: "- I-cord technique\n- 6 inches long",
         stitches: 36,
         rows: 1,
         repeats: 4,
@@ -300,7 +300,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Main Square",
-        notes: ["Cotton yarn only", "Tight gauge"],
+        notes: "- Cotton yarn only\n- Tight gauge",
         stitches: 100,
         rows: 25,
         repeats: 6,
@@ -308,7 +308,7 @@ const projectTemplates = [
       },
       {
         name: "Hanging Loop",
-        notes: ["Chain 12", "Attach to corner"],
+        notes: "- Chain 12\n- Attach to corner",
         stitches: 12,
         rows: 1,
         repeats: 6,
@@ -322,7 +322,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Head",
-        notes: ["Start with magic ring", "Stuff firmly"],
+        notes: "- Start with magic ring\n- Stuff firmly",
         stitches: 72,
         rows: 12,
         repeats: 1,
@@ -330,7 +330,7 @@ const projectTemplates = [
       },
       {
         name: "Body",
-        notes: ["Oval shape", "Leave opening for stuffing"],
+        notes: "- Oval shape\n- Leave opening for stuffing",
         stitches: 84,
         rows: 14,
         repeats: 1,
@@ -338,7 +338,7 @@ const projectTemplates = [
       },
       {
         name: "Arms",
-        notes: ["Cylinder shape", "Stuff lightly"],
+        notes: "- Cylinder shape\n- Stuff lightly",
         stitches: 36,
         rows: 8,
         repeats: 2,
@@ -346,7 +346,7 @@ const projectTemplates = [
       },
       {
         name: "Legs",
-        notes: ["Cone shape", "Stuff for stability"],
+        notes: "- Cone shape\n- Stuff for stability",
         stitches: 42,
         rows: 10,
         repeats: 2,
@@ -354,7 +354,7 @@ const projectTemplates = [
       },
       {
         name: "Ears",
-        notes: ["Small circles", "Attach securely"],
+        notes: "- Small circles\n- Attach securely",
         stitches: 12,
         rows: 3,
         repeats: 2,
@@ -368,7 +368,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Chevron Pattern",
-        notes: ["Color changes every 2 rows", "Point precision"],
+        notes: "- Color changes every 2 rows\n- Point precision",
         stitches: 360,
         rows: 80,
         repeats: 1,
@@ -376,7 +376,7 @@ const projectTemplates = [
       },
       {
         name: "Border",
-        notes: ["Single crochet edge", "Corner adjustments"],
+        notes: "- Single crochet edge\n- Corner adjustments",
         stitches: 200,
         rows: 3,
         repeats: 1,
@@ -390,7 +390,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Bottom",
-        notes: ["Circular base", "Sturdy foundation"],
+        notes: "- Circular base\n- Sturdy foundation",
         stitches: 60,
         rows: 10,
         repeats: 1,
@@ -398,7 +398,7 @@ const projectTemplates = [
       },
       {
         name: "Mesh Body",
-        notes: ["Open weave", "Drainage holes"],
+        notes: "- Open weave\n- Drainage holes",
         stitches: 120,
         rows: 25,
         repeats: 1,
@@ -406,7 +406,7 @@ const projectTemplates = [
       },
       {
         name: "Reinforced Rim",
-        notes: ["Double crochet band", "Handle attachment"],
+        notes: "- Double crochet band\n- Handle attachment",
         stitches: 60,
         rows: 2,
         repeats: 1,
@@ -414,7 +414,7 @@ const projectTemplates = [
       },
       {
         name: "Handles",
-        notes: ["Braided rope style", "Extra strength"],
+        notes: "- Braided rope style\n- Extra strength",
         stitches: 150,
         rows: 1,
         repeats: 2,
@@ -428,7 +428,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Center Flowers",
-        notes: ["Make 12 motifs", "Join as you go"],
+        notes: "- Make 12 motifs\n- Join as you go",
         stitches: 48,
         rows: 6,
         repeats: 12,
@@ -436,7 +436,7 @@ const projectTemplates = [
       },
       {
         name: "Connecting Mesh",
-        notes: ["Fill between flowers", "Maintain drape"],
+        notes: "- Fill between flowers\n- Maintain drape",
         stitches: 144,
         rows: 12,
         repeats: 1,
@@ -444,7 +444,7 @@ const projectTemplates = [
       },
       {
         name: "Lace Edge",
-        notes: ["Scalloped border", "Block for best shape"],
+        notes: "- Scalloped border\n- Block for best shape",
         stitches: 240,
         rows: 4,
         repeats: 1,
@@ -458,7 +458,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Round Coasters",
-        notes: ["4-inch diameter", "Absorbent cotton"],
+        notes: "- 4-inch diameter\n- Absorbent cotton",
         stitches: 48,
         rows: 8,
         repeats: 6,
@@ -466,7 +466,7 @@ const projectTemplates = [
       },
       {
         name: "Storage Basket",
-        notes: ["Holds complete set", "Matching color"],
+        notes: "- Holds complete set\n- Matching color",
         stitches: 96,
         rows: 12,
         repeats: 1,
@@ -480,7 +480,7 @@ const projectTemplates = [
     sections: [
       {
         name: "Cable Panels",
-        notes: ["Faux cable technique", "Consistent crosses"],
+        notes: "- Faux cable technique\n- Consistent crosses",
         stitches: 200,
         rows: 40,
         repeats: 5,
@@ -488,7 +488,7 @@ const projectTemplates = [
       },
       {
         name: "Plain Sections",
-        notes: ["Single crochet fill", "Even tension"],
+        notes: "- Single crochet fill\n- Even tension",
         stitches: 160,
         rows: 40,
         repeats: 4,
@@ -496,7 +496,7 @@ const projectTemplates = [
       },
       {
         name: "Ribbed Border",
-        notes: ["Post stitch ribbing", "All around edge"],
+        notes: "- Post stitch ribbing\n- All around edge",
         stitches: 280,
         rows: 6,
         repeats: 1,
@@ -541,7 +541,7 @@ export const templateProject: Project = {
     sections: {
       defaultSection: {
         name: "Untitled Section",
-        notes: [],
+        notes: "",
         data: {
           stitches: 0,
           rows: 0,
