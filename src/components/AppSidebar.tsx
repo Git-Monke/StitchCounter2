@@ -1,4 +1,4 @@
-import { useProjects, type Project } from "@/hooks/useProjects";
+import { useProjects } from "@/hooks/useProjects";
 import {
   Sidebar,
   SidebarContent,
@@ -78,13 +78,13 @@ export const AppSidebar = () => {
 
   const filteredRecentProjects = searchQuery
     ? recentProjects.filter(([_, project]) =>
-        project.name.toLowerCase().includes(searchQuery.toLowerCase())
+        project.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : recentProjects;
 
   const filteredOldProjects = searchQuery
     ? oldProjects.filter(([_, project]) =>
-        project.name.toLowerCase().includes(searchQuery.toLowerCase())
+        project.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : oldProjects;
 

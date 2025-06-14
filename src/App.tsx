@@ -8,9 +8,21 @@ import { AppHeader } from "./components/AppHeader";
 import { ProjectOverview } from "./components/ProjectOverview";
 import { CounterSettings } from "./components/CounterSettings";
 import { TimerSettings } from "./components/TimerSettings";
+import { StitchCounter } from "./components/StitchCounter/StitchCounter";
+import { Button } from "./components/ui/button";
 
 const AppContent = () => {
   const projectName = useSelectedProjectName();
+
+  const isPopup = window.opener != null;
+
+  if (isPopup) {
+    return (
+      <SidebarProvider>
+        <StitchCounter />
+      </SidebarProvider>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen flex flex-col relative">
@@ -39,6 +51,19 @@ const AppContent = () => {
           </div>
         </div>
       )}
+      <div className="flex justify-center mt-4">
+        <Button
+          onClick={() => {
+            window.open(
+              window.location.href,
+              "popup",
+              "width=400,height=400,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no",
+            );
+          }}
+        >
+          Open Popup
+        </Button>
+      </div>
     </div>
   );
 };

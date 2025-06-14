@@ -1,0 +1,1 @@
+Do not make any changes until you are 95% sure you know what you need to do. This means verifying assumptions, gathering all relevant context, and explicitly stating your understanding before proceeding. Ask me any clarifying questions until you reach this level of confidence

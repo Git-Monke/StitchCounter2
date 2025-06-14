@@ -40,6 +40,7 @@ export interface Project {
   name: string;
   color: string;
   lastModified: number;
+  selectedSectionID: string;
 }
 
 interface ProjectStore {
@@ -55,6 +56,13 @@ interface ProjectStore {
   updateSelectedProject: <K extends keyof Project>(
     key: K,
     updateFunc: (data: Project[K]) => Project[K],
+  ) => void;
+  setSelectedSection: (projectID: string, sectionID: string) => void;
+  addSectionToProject: (projectID: string) => void;
+  renameSection: (
+    projectID: string,
+    sectionID: string,
+    newName: string,
   ) => void;
 }
 
@@ -73,9 +81,26 @@ export const useProjects = create<ProjectStore>()(
           set({ selectedProjectID: newProject });
         },
 
+        setSelectedSection: (projectID, sectionID) => {
+          set((state) => ({
+            projects: {
+              ...state.projects,
+              [projectID]: {
+                ...state.projects[projectID],
+                selectedSectionID: sectionID,
+                lastModified: Date.now(),
+              },
+            },
+          }));
+        },
+
         createNewProject: () => {
           const projectID = randomID();
           const newProject: Project = { ...templateProject };
+
+          // Pick the first section as default selected, if any
+          const firstSectionID = Object.keys(newProject.data.sections)[0] || "";
+          newProject.selectedSectionID = firstSectionID;
 
           set((state) => ({
             projects: {
@@ -86,13 +111,82 @@ export const useProjects = create<ProjectStore>()(
           }));
         },
 
+        addSectionToProject: (projectID) => {
+          set((state) => {
+            const project = state.projects[projectID];
+            if (!project) return state;
+
+            // Generate a unique section key
+            const newSectionID = Math.random().toString(36).slice(2, 11);
+            const newSection = {
+              name: "Untitled Section",
+              notes: [],
+              data: {
+                stitches: 0,
+                rows: 0,
+                repeats: 0,
+                time: 0,
+              },
+            };
+
+            return {
+              projects: {
+                ...state.projects,
+                [projectID]: {
+                  ...project,
+                  data: {
+                    ...project.data,
+                    sections: {
+                      ...project.data.sections,
+                      [newSectionID]: newSection,
+                    },
+                  },
+                  selectedSectionID: newSectionID,
+                  lastModified: Date.now(),
+                },
+              },
+            };
+          });
+        },
+
+        renameSection: (projectID, sectionID, newName) => {
+          set((state) => {
+            const project = state.projects[projectID];
+            if (!project) return state;
+            const section = project.data.sections[sectionID];
+            if (!section) return state;
+
+            return {
+              projects: {
+                ...state.projects,
+                [projectID]: {
+                  ...project,
+                  data: {
+                    ...project.data,
+                    sections: {
+                      ...project.data.sections,
+                      [sectionID]: {
+                        ...section,
+                        name: newName,
+                      },
+                    },
+                  },
+                  lastModified: Date.now(),
+                },
+              },
+            };
+          });
+        },
+
         deleteProject: (projectID) => {
           set((state) => {
             const newProjects = { ...state.projects };
             delete newProjects[projectID];
 
             // Clear selection if we're deleting the selected project
-            const newState: Partial<ProjectStore> = { projects: newProjects };
+            const newState: Partial<ProjectStore> = {
+              projects: newProjects,
+            };
             if (state.selectedProjectID === projectID) {
               newState.selectedProjectID = "";
             }
@@ -148,6 +242,15 @@ export const useProjects = create<ProjectStore>()(
 // Selector helpers
 export const useSelectedProject = () =>
   useProjects((state) => state.projects[state.selectedProjectID] || null);
+
+export const useSelectedProjectID = () =>
+  useProjects((state) => state.selectedProjectID);
+
+export const useSelectedSectionID = () =>
+  useProjects(
+    (state) =>
+      state.projects[state.selectedProjectID]?.selectedSectionID || null,
+  );
 
 export const createSelectedProjectSelector =
   <K extends keyof Project>(key: K) =>

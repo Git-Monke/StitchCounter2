@@ -12,12 +12,11 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { HexColorPicker } from "react-colorful";
-import { motion, useAnimation } from "framer-motion";
 
 const ColorPickerPopover = () => {
   const { updateSelectedProject } = useProjects();
   const selectedColor = useProjects(
-    (state) => state.projects[state.selectedProjectID]?.color ?? "#000000"
+    (state) => state.projects[state.selectedProjectID]?.color ?? "#000000",
   );
 
   return (
@@ -49,7 +48,7 @@ export const AppHeader = () => {
   const { renameProject, deleteProject, selectedProjectID } = useProjects();
   const projectName = useSelectedProjectName();
   const projectColor = useProjects(
-    (state) => state.projects[state.selectedProjectID]?.color
+    (state) => state.projects[state.selectedProjectID]?.color,
   );
 
   const [renamingProject, setRenamingProject] = useState(false);

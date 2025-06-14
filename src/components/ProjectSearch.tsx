@@ -1,11 +1,7 @@
-import { useState, useMemo } from "react";
-import { Card } from "./ui/card";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import { Search, X } from "lucide-react";
 import { SidebarMenuButton, useSidebar } from "./ui/sidebar";
 import { Input } from "./ui/input";
-import { useProjects } from "../hooks/useProjects";
-import Fuse from "fuse.js";
 
 interface ProjectSearchProps {
   onSearch: (query: string) => void;
@@ -14,41 +10,7 @@ interface ProjectSearchProps {
 export function ProjectSearch({ onSearch }: ProjectSearchProps) {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const projects = useProjects((state) => state.projects);
-  const setSelectedProjectID = useProjects(
-    (state) => state.setSelectedProjectID
-  );
   const { setOpen, state } = useSidebar();
-
-  // Create searchable array of projects
-  const searchableProjects = useMemo(() => {
-    return Object.entries(projects).map(([id, project]) => ({
-      id,
-      name: project.name,
-      color: project.color,
-    }));
-  }, [projects]);
-
-  // Initialize Fuse instance
-  const fuse = useMemo(() => {
-    return new Fuse(searchableProjects, {
-      keys: ["name"],
-      threshold: 0.3,
-    });
-  }, [searchableProjects]);
-
-  // Get search results
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    return fuse.search(searchQuery).map((result) => result.item);
-  }, [fuse, searchQuery]);
-
-  const handleProjectSelect = (projectId: string) => {
-    setSelectedProjectID(projectId);
-    setIsSearching(false);
-    setSearchQuery("");
-    onSearch("");
-  };
 
   const handleStartSearch = () => {
     setOpen(true);

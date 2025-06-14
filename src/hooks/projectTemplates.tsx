@@ -11,7 +11,7 @@ function generateProject(
     rows: number;
     repeats: number;
     time: number;
-  }>
+  }>,
 ): Project {
   const sections: Record<string, any> = {};
 
@@ -47,6 +47,7 @@ function generateProject(
         autoTurnOffDelay: Math.floor(Math.random() * 25) + 10,
       },
     },
+    selectedSectionID: "",
     data: { sections },
   };
 }
@@ -513,7 +514,7 @@ projectTemplates.slice(0, 15).forEach((template, index) => {
   exampleProjects[id] = generateProject(
     template.name,
     template.color,
-    template.sections
+    template.sections,
   );
 });
 
@@ -537,6 +538,18 @@ export const templateProject: Project = {
     },
   },
   data: {
-    sections: {},
+    sections: {
+      defaultSection: {
+        name: "Untitled Section",
+        notes: [],
+        data: {
+          stitches: 0,
+          rows: 0,
+          repeats: 0,
+          time: 0,
+        },
+      },
+    },
   },
+  selectedSectionID: "defaultSection",
 };
