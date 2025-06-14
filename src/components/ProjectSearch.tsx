@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Card } from "./ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X } from "lucide-react";
-import { SidebarMenuButton } from "./ui/sidebar";
+import { SidebarMenuButton, useSidebar } from "./ui/sidebar";
 import { Input } from "./ui/input";
 import { useProjects } from "../hooks/useProjects";
 import Fuse from "fuse.js";
@@ -18,6 +18,7 @@ export function ProjectSearch({ onSearch }: ProjectSearchProps) {
   const setSelectedProjectID = useProjects(
     (state) => state.setSelectedProjectID
   );
+  const { setOpen, state } = useSidebar();
 
   // Create searchable array of projects
   const searchableProjects = useMemo(() => {
@@ -50,6 +51,7 @@ export function ProjectSearch({ onSearch }: ProjectSearchProps) {
   };
 
   const handleStartSearch = () => {
+    setOpen(true);
     setIsSearching(true);
   };
 
@@ -65,7 +67,7 @@ export function ProjectSearch({ onSearch }: ProjectSearchProps) {
     onSearch(query);
   };
 
-  if (isSearching) {
+  if (isSearching && state === "expanded") {
     return (
       <div className="flex items-center gap-2 px-2">
         <Input
@@ -89,7 +91,7 @@ export function ProjectSearch({ onSearch }: ProjectSearchProps) {
     <SidebarMenuButton asChild onClick={handleStartSearch}>
       <div>
         <Search />
-        <span>Search Projects</span>
+        {state === "expanded" && <span>Search Projects</span>}
       </div>
     </SidebarMenuButton>
   );
