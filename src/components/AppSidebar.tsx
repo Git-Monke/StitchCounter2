@@ -24,8 +24,8 @@ const SidebarBullet = ({ projectID }: { projectID: string }) => {
   const { state } = useSidebar();
   const { selectedProjectID, setSelectedProjectID } = useProjects();
 
-  const projectName = useProjects((state) => state.projects[projectID].name);
-  const projectColor = useProjects((state) => state.projects[projectID].color);
+  const projectName = useProjects((state) => state.projects[projectID]?.name);
+  const projectColor = useProjects((state) => state.projects[projectID]?.color);
 
   return (
     <AnimatePresence initial={false}>

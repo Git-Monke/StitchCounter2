@@ -1,54 +1,92 @@
-# React + TypeScript + Vite
+# Stitch Counter 2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A tracking and management tool for knitting and crocheting projects. Stitch Counter helps crafters track stitches, rows, repeats, and time spent on different sections of their projects.
 
-Currently, two official plugins are available:
+![Stitch Counter 2 Screenshot](screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Project Management**
+  - Create and manage multiple projects
+  - Customize each project with a color identifier
+  - Organize projects into multiple sections
+  - Track progress across all sections
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Counters**
+  - Track stitches, rows, repeats, and time per section
+  - Enable/disable specific counters based on project needs
+  - Automatic totals calculation across all sections
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Timer Functionality**
+  - Track time spent on each section
+  - Auto-pause timer after period of inactivity
+  - Reminder notifications to resume timing
+  - Time tracking persists between sessions
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Notes & Documentation**
+  - Add section-specific notes
+  - View all project notes in a central location
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Pop-out Counter Mode**
+  - Launch a compact pop-up window so other applications can be used while counting
+  - Perfect for using alongside pattern PDFs or watching videos
+  - Automatically syncs with the main application
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Usage Guide
+
+### Creating a Project
+
+1. Click the "+" button in the sidebar to create a new project
+2. Rename the project accordingly
+3. Customize the project color (optional)
+4. Configure which counters you need in "Counter Settings"
+5. Optionally configure timer settings
+
+### Managing Sections
+
+1. Click "Add Section" in the sidebar to create new project sections
+2. Use the dropdown menu in each section to:
+   - Rename sections
+   - Delete sections
+3. Select a section to view and edit its counters and notes
+
+### Using Counters
+
+- Click the increment/decrement buttons to adjust values
+- Click the reset button to set a counter back to zero
+- When all three counters are active, they display in compact mode
+
+### Using the Timer
+
+1. Click the play/pause button to start or stop the timer
+2. Configure timer settings in the main project view:
+   - Auto Turn-Off: Pauses the timer after inactivity
+   - Remind Turn-On: Sends notifications to resume timing
+
+### Working with Notes
+
+1. Click "Edit Notes" to add notes to the current section
+2. Notes can be viewed in the main Project Overview
+
+### Using Pop-up Mode
+
+1. Click "Open Counter!" to open a compact counter window
+2. Changes in either window will sync automatically
+
+## Technology Stack
+
+- React 19 with TypeScript
+- Vite
+- Zustand for state management
+- Tailwind CSS & shadcn/ui for styling
+- Local storage persistence with cross-window syncing
+
+## License
+
+[GPL-3.0](LICENSE)
+
+## Acknowledgments
+
+- Built with [React](https://react.dev/)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- State management with [Zustand](https://zustand-demo.pmnd.rs/)
