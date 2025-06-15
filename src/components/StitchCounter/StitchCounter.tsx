@@ -4,6 +4,7 @@ import {
   useSelectedProject,
   useProjects,
   useSelectedSectionID,
+  useSelectedProjectID,
 } from "../../hooks/useProjects";
 import { StitchCounterSidebar } from "./StitchCounterSidebar";
 import { StitchCounterSectionTitle } from "./StitchCounterSectionTitle";
@@ -12,6 +13,13 @@ import { SectionTimer } from "./SectionTimer";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
+import { Settings, Trash } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "../ui/dropdown-menu";
 
 import { useSelectedProjectName } from "../../hooks/useProjects";
 import { Toaster } from "../ui/sonner";
@@ -19,13 +27,24 @@ import { Toaster } from "../ui/sonner";
 export const StitchCounter: React.FC = () => {
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [notesDraft, setNotesDraft] = useState("");
+  const [editingSection, setEditingSection] = useState(false);
   const project = useSelectedProject();
   const projectName = useSelectedProjectName();
+  const projectId = useSelectedProjectID();
   const zustandRehydrate = useProjects.persist.rehydrate;
   const sectionId = useSelectedSectionID();
   const updateSelectedProject = useProjects(
     (state) => state.updateSelectedProject,
   );
+  const deleteSection = useProjects((state) => state.deleteSection);
+
+  const activeCounters = project?.options?.counterOptions
+    ? [
+        project.options.counterOptions.stitches,
+        project.options.counterOptions.rows,
+        project.options.counterOptions.repeats,
+      ].filter(Boolean).length
+    : 0;
 
   const handleEditNotes = () => {
     if (!sectionId || !project) return;
@@ -51,6 +70,12 @@ export const StitchCounter: React.FC = () => {
   const handleCancelNotes = () => {
     setIsEditingNotes(false);
     setNotesDraft("");
+  };
+
+  const handleDeleteSection = () => {
+    if (sectionId && projectId) {
+      deleteSection(projectId, sectionId);
+    }
   };
 
   // Set document title to project name, update dynamically
@@ -129,27 +154,77 @@ export const StitchCounter: React.FC = () => {
       <StitchCounterSidebar />
       <div className="flex-1 p-4 flex flex-col">
         {/* Main stitch counter content goes here */}
-        <div className="flex items-center gap-1 min-w-0">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="h-4 mx-1" />
-          <h2 className="text-lg font-bold flex items-center gap-1 min-w-0 truncate">
-            <StitchCounterSectionTitle />
-          </h2>
+        <div className="flex items-center gap-1 min-w-0 justify-between">
+          <div className="flex items-center gap-1">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="h-4 mx-1" />
+            <h2 className="text-lg font-bold flex items-center gap-1 min-w-0 truncate">
+              <StitchCounterSectionTitle
+                editing={editingSection}
+                setEditing={setEditingSection}
+              />
+            </h2>
+          </div>
+          {sectionId && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Settings className="w-5 h-5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem onClick={() => setEditingSection(true)}>
+                  Rename Section
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={handleDeleteSection}
+                >
+                  <Trash className="mr-2" />
+                  Delete Section
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
         <div className="flex flex-col gap-4 w-full flex-1 min-h-0">
           {!isEditingNotes && (
-            <div className="flex flex-col gap-4 w-full max-w-xs mx-auto mt-4">
-              <div className="flex flex-col gap-4">
-                {project.options?.counterOptions?.stitches && (
-                  <DataPointCounter dataKey="stitches" label="Stitches" />
+            <div className="flex flex-col gap-4 w-full max-w-md mx-auto mt-4">
+              <div className="grid gap-4">
+                {project.options?.counterOptions?.time && sectionId && (
+                  <div className="w-full">
+                    <SectionTimer />
+                  </div>
                 )}
-                {project.options?.counterOptions?.rows && (
-                  <DataPointCounter dataKey="rows" label="Rows" />
-                )}
-                {project.options?.counterOptions?.repeats && (
-                  <DataPointCounter dataKey="repeats" label="Repeats" />
-                )}
-                {project.options?.counterOptions?.time && <SectionTimer />}
+                <div
+                  className={`grid gap-4 ${
+                    activeCounters === 1
+                      ? "grid-cols-1"
+                      : activeCounters === 2
+                        ? "grid-cols-2"
+                        : "grid-cols-1"
+                  }`}
+                >
+                  {project.options?.counterOptions?.stitches && (
+                    <DataPointCounter
+                      dataKey="stitches"
+                      label="Stitches"
+                      compact={activeCounters === 3}
+                    />
+                  )}
+                  {project.options?.counterOptions?.rows && (
+                    <DataPointCounter
+                      dataKey="rows"
+                      label="Rows"
+                      compact={activeCounters === 3}
+                    />
+                  )}
+                  {project.options?.counterOptions?.repeats && (
+                    <DataPointCounter
+                      dataKey="repeats"
+                      label="Repeats"
+                      compact={activeCounters === 3}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -176,11 +251,13 @@ export const StitchCounter: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="flex justify-end mt-auto">
-              <Button onClick={handleEditNotes} variant="outline">
-                Edit Notes
-              </Button>
-            </div>
+            sectionId && (
+              <div className="flex justify-end mt-auto">
+                <Button onClick={handleEditNotes} variant="outline">
+                  Edit Notes
+                </Button>
+              </div>
+            )
           )}
         </div>
       </div>

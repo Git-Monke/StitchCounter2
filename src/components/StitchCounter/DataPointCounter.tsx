@@ -12,11 +12,13 @@ export type DataPointKey = "stitches" | "rows" | "repeats";
 interface DataPointCounterProps {
   dataKey: DataPointKey;
   label: string;
+  compact?: boolean;
 }
 
 export const DataPointCounter: React.FC<DataPointCounterProps> = ({
   dataKey,
   label,
+  compact = false,
 }) => {
   const selectedSectionID = useSelectedSectionID();
   const project = useSelectedProject();
@@ -56,43 +58,50 @@ export const DataPointCounter: React.FC<DataPointCounterProps> = ({
   };
 
   return (
-    <div className="flex items-center w-full gap-2">
-      {/* Label left */}
-      <span className="text-sm font-medium flex-shrink-0 w-16 text-left">
-        {label}
-      </span>
-      {/* Center group: up, value, down */}
-      <div className="flex items-center justify-center flex-1 gap-1">
-        <Button
-          size="icon"
-          variant="ghost"
-          aria-label={`Decrement ${label}`}
-          onClick={() => setValue(Math.max(0, value - 1))}
-          disabled={value <= 0}
-        >
-          <ChevronDown />
-        </Button>
-        <span className="w-10 text-center tabular-nums text-base">{value}</span>
-        <Button
-          size="icon"
-          variant="ghost"
-          aria-label={`Increment ${label}`}
-          onClick={() => setValue(value + 1)}
-        >
-          <ChevronUp />
-        </Button>
-      </div>
-      {/* Reset right */}
-      <Button
-        size="icon"
-        variant="ghost"
-        aria-label={`Reset ${label}`}
-        onClick={() => setValue(0)}
-        disabled={value === 0}
-        className="ml-auto"
+    <div
+      className={`flex ${
+        compact ? "items-center justify-between" : "flex-col"
+      } py-2 px-3 rounded-lg bg-primary/5 border border-primary/10`}
+    >
+      <span
+        className={`${compact ? "text-sm mr-2" : "text-xs text-muted-foreground leading-none"}`}
       >
-        <RotateCcw />
-      </Button>
+        {label}:
+      </span>
+      <div className="flex items-center gap-2">
+        <span className="text-base font-medium tabular-nums">{value}</span>
+        <div className={`flex items-center gap-1 ${compact ? "" : "ml-auto"}`}>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+            aria-label={`Decrement ${label}`}
+            onClick={() => setValue(Math.max(0, value - 1))}
+            disabled={value <= 0}
+          >
+            <ChevronDown className="h-4 w-4" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+            aria-label={`Increment ${label}`}
+            onClick={() => setValue(value + 1)}
+          >
+            <ChevronUp className="h-4 w-4" />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+            aria-label={`Reset ${label}`}
+            onClick={() => setValue(0)}
+            disabled={value === 0}
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

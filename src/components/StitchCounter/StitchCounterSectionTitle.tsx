@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Pencil, Check, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import {
   useSelectedProject,
   useSelectedSectionID,
@@ -13,26 +13,66 @@ import {
  * Displays and allows editing of the current section's name.
  * Uses Zustand hooks internally for state management.
  */
-export const StitchCounterSectionTitle: React.FC = () => {
+interface StitchCounterSectionTitleProps {
+  editing: boolean;
+  setEditing: (editing: boolean) => void;
+}
+
+export const StitchCounterSectionTitle: React.FC<
+  StitchCounterSectionTitleProps
+> = ({ editing, setEditing }) => {
   const project = useSelectedProject();
   const selectedSectionID = useSelectedSectionID();
   const selectedProjectID = useSelectedProjectID();
   const renameSection = useProjects((state) => state.renameSection);
 
-  const [editing, setEditing] = useState(false);
+  const sectionName =
+    selectedSectionID && project.data.sections[selectedSectionID]
+      ? project.data.sections[selectedSectionID].name
+      : "No section selected";
+
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const editingStartTime = useRef<number | null>(null);
 
-  // Autofocus input when editing starts
+  // When editing becomes true, clear the input and focus/select it
   useEffect(() => {
-    if (editing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
+    if (editing) {
+      setInputValue("");
+      editingStartTime.current = Date.now();
+
+      // Aggressive focus strategy with multiple attempts
+      const focusInput = () => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          console.log("Focus attempt made");
+        }
+      };
+
+      // Immediate attempt
+      focusInput();
+
+      // Multiple delayed attempts to ensure focus
+      setTimeout(focusInput, 0);
+      setTimeout(focusInput, 50);
+      setTimeout(focusInput, 1000);
     }
   }, [editing]);
 
   // Cancel editing on blur
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Prevent premature blur by checking elapsed time since editing started
+    const elapsedTime = editingStartTime.current
+      ? Date.now() - editingStartTime.current
+      : null;
+
+    if (elapsedTime !== null && elapsedTime < 300) {
+      if (inputRef.current) {
+        inputRef.current.focus(); // Refocus the input
+      }
+      return;
+    }
+
     // Only cancel if focus moves outside the input and the buttons
     if (
       e.relatedTarget &&
@@ -41,7 +81,6 @@ export const StitchCounterSectionTitle: React.FC = () => {
       return;
     }
     setEditing(false);
-    setInputValue("");
   };
 
   // Submit the name change
@@ -55,22 +94,15 @@ export const StitchCounterSectionTitle: React.FC = () => {
       renameSection(selectedProjectID, selectedSectionID, inputValue.trim());
     }
     setEditing(false);
-    setInputValue("");
   };
 
   // Cancel editing
   const handleCancel = () => {
     setEditing(false);
-    setInputValue("");
   };
 
-  const sectionName =
-    selectedSectionID && project.data.sections[selectedSectionID]
-      ? project.data.sections[selectedSectionID].name
-      : "No section selected";
-
   return (
-    <div className="flex items-center gap-1 min-w-0 truncate">
+    <div className="relative flex items-center gap-1 min-w-0 truncate focus-within:z-10">
       {editing ? (
         <>
           <Input
@@ -87,6 +119,7 @@ export const StitchCounterSectionTitle: React.FC = () => {
             }}
             className="truncate text-base h-8 px-2 py-1 w-auto max-w-[8rem] sm:max-w-[12rem]"
             style={{ fontSize: "inherit" }}
+            autoFocus
           />
           <Button
             type="button"
@@ -97,7 +130,7 @@ export const StitchCounterSectionTitle: React.FC = () => {
             onClick={handleSubmit}
             tabIndex={0}
           >
-            <Check size={18} />
+            <Check className="w-5 h-5" />
           </Button>
           <Button
             type="button"
@@ -107,27 +140,12 @@ export const StitchCounterSectionTitle: React.FC = () => {
             onClick={handleCancel}
             tabIndex={0}
           >
-            <X size={18} />
+            <X className="w-5 h-5" />
           </Button>
         </>
       ) : (
         <>
           <span className="truncate">{sectionName}</span>
-          {selectedSectionID && (
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="ml-1 text-muted-foreground hover:text-primary flex-shrink-0"
-              aria-label="Edit section name"
-              onClick={() => {
-                setEditing(true);
-                setInputValue(sectionName);
-              }}
-            >
-              <Pencil size={18} />
-            </Button>
-          )}
         </>
       )}
     </div>

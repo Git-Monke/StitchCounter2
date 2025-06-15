@@ -100,7 +100,7 @@ const TimerInput = ({
           }
         }}
       />
-      <Label htmlFor={prop}>Minutes</Label>
+      <Label htmlFor={prop}>Mins</Label>
     </div>
   );
 };

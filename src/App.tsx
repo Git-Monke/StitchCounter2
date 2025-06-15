@@ -38,7 +38,7 @@ const AppContent = () => {
       )}
 
       {projectName != null && (
-        <div className="p-8 px-16 grid grid-rows-[auto_1fr] gap-8">
+        <div className="pt-8 px-16 grid grid-rows-[auto_1fr] gap-8 relative">
           <div className="flex-1 flex flex-col gap-8">
             <ProjectOverview />
             <h3 className="text-sm font-medium text-muted-foreground">
@@ -48,22 +48,20 @@ const AppContent = () => {
               <CounterSettings />
               <TimerSettings />
             </div>
+            <Button
+              onClick={() => {
+                window.open(
+                  window.location.href,
+                  "popup",
+                  "width=400,height=400,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no",
+                );
+              }}
+            >
+              Open Counter!
+            </Button>
           </div>
         </div>
       )}
-      <div className="flex justify-center mt-4">
-        <Button
-          onClick={() => {
-            window.open(
-              window.location.href,
-              "popup",
-              "width=400,height=400,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no",
-            );
-          }}
-        >
-          Open Popup
-        </Button>
-      </div>
     </div>
   );
 };

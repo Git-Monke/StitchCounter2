@@ -64,6 +64,7 @@ interface ProjectStore {
     sectionID: string,
     newName: string,
   ) => void;
+  deleteSection: (projectID: string, sectionID: string) => void;
 }
 
 const randomID = () => Math.random().toString(36).slice(2, 11);
@@ -171,6 +172,40 @@ export const useProjects = create<ProjectStore>()(
                       },
                     },
                   },
+                  lastModified: Date.now(),
+                },
+              },
+            };
+          });
+        },
+
+        deleteSection: (projectID, sectionID) => {
+          set((state) => {
+            const project = state.projects[projectID];
+            if (!project) return state;
+            if (!project.data.sections[sectionID]) return state;
+
+            // Create new sections object without the deleted section
+            const newSections = { ...project.data.sections };
+            delete newSections[sectionID];
+
+            // Get remaining section IDs
+            const remainingSectionIDs = Object.keys(newSections);
+
+            // Select the first available section, or none if there are no sections left
+            const newSelectedSectionID =
+              remainingSectionIDs.length > 0 ? remainingSectionIDs[0] : "";
+
+            return {
+              projects: {
+                ...state.projects,
+                [projectID]: {
+                  ...project,
+                  data: {
+                    ...project.data,
+                    sections: newSections,
+                  },
+                  selectedSectionID: newSelectedSectionID,
                   lastModified: Date.now(),
                 },
               },

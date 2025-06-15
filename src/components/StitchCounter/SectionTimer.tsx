@@ -294,33 +294,38 @@ export const SectionTimer: React.FC = () => {
   (window as any).__stitchCounterMarkInteraction = markInteraction;
 
   return (
-    <div className="flex items-center w-full gap-2">
-      <span className="text-sm font-medium flex-shrink-0 w-16 text-left">
-        Timer
-      </span>
-      <div className="flex items-center justify-center flex-1 gap-1">
-        <span className="w-16 text-center tabular-nums text-base">
+    <div className="flex flex-col py-2 px-3 rounded-lg bg-primary/5 border border-primary/10">
+      <span className="text-xs text-muted-foreground leading-none">Timer</span>
+      <div className="flex items-center gap-2">
+        <span className="text-base font-medium tabular-nums">
           {formatTime(displayValue)}
         </span>
+        <div className="flex items-center gap-1 ml-auto">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+            aria-label={isRunning ? "Pause Timer" : "Start Timer"}
+            onClick={isRunning ? handleStop : handleStart}
+          >
+            {isRunning ? (
+              <Pause className="h-4 w-4" />
+            ) : (
+              <Play className="h-4 w-4" />
+            )}
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+            aria-label="Reset Timer"
+            onClick={handleReset}
+            disabled={displayValue === 0}
+          >
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
-      <Button
-        size="icon"
-        variant="ghost"
-        aria-label={isRunning ? "Pause Timer" : "Start Timer"}
-        onClick={isRunning ? handleStop : handleStart}
-        className="ml-auto"
-      >
-        {isRunning ? <Pause /> : <Play />}
-      </Button>
-      <Button
-        size="icon"
-        variant="ghost"
-        aria-label="Reset Timer"
-        onClick={handleReset}
-        disabled={displayValue === 0}
-      >
-        <RotateCcw />
-      </Button>
     </div>
   );
 };

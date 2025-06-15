@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useSelectedProject } from "../hooks/useProjects";
 import { formatDistanceToNow } from "date-fns";
-import ReactMarkdown from "react-markdown";
 
 interface StatCardProps {
   label: string;
@@ -108,8 +107,8 @@ export function ProjectOverview() {
                       <span className="text-xs text-muted-foreground mb-2">
                         {section.name}
                       </span>
-                      <div className="text-sm">
-                        <ReactMarkdown>{section.notes}</ReactMarkdown>
+                      <div className="text-sm whitespace-pre-wrap">
+                        {section.notes}
                       </div>
                     </div>
                   ),
