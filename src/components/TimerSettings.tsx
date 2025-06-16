@@ -15,6 +15,7 @@ import { Switch } from "./ui/switch";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useRef, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const TimerSwitch = ({
   title,
@@ -57,6 +58,7 @@ const TimerInput = ({
 }) => {
   const value = useSelectedProjectOption("timerOptions", prop);
   const { updateSelectedProject } = useProjects();
+  const isMobile = useIsMobile();
 
   const [focused, setFocused] = useState(false);
   const [tempValue, setTempValue] = useState(value + "");
@@ -100,13 +102,18 @@ const TimerInput = ({
           }
         }}
       />
-      <Label htmlFor={prop}>Mins</Label>
+      <Label htmlFor={prop}>{isMobile ? "m" : "Mins"}</Label>
     </div>
   );
 };
 
 export const TimerSettings = () => {
   const timerEnabled = useSelectedProjectOption("counterOptions", "time");
+  const isMobile = useIsMobile();
+
+  // Get toggle states for conditional rendering and opacity
+  const remindTurnOn = useSelectedProjectOption("timerOptions", "remindTurnOn");
+  const autoTurnOff = useSelectedProjectOption("timerOptions", "autoTurnOff");
 
   return (
     <Card
@@ -118,12 +125,41 @@ export const TimerSettings = () => {
       </CardHeader>
 
       <CardContent>
-        <div className="grid grid-cols-2 gap-8">
-          <TimerSwitch prop="remindTurnOn" title="Remind Turn-On" />
-          <TimerSwitch prop="autoTurnOff" title="Auto Turn-Off" />
-          <TimerInput title="Wait" prop={"remindTurnOnDelay"} />
-          <TimerInput title="Wait" prop={"autoTurnOffDelay"} />
-        </div>
+        {isMobile ? (
+          <div className="flex flex-col gap-8">
+            <div>
+              <TimerSwitch prop="remindTurnOn" title="Remind Turn-On" />
+              <div
+                className={`mt-4 transition-opacity ${!remindTurnOn ? "opacity-50" : ""}`}
+              >
+                <TimerInput title="Wait" prop={"remindTurnOnDelay"} />
+              </div>
+            </div>
+            <div>
+              <TimerSwitch prop="autoTurnOff" title="Auto Turn-Off" />
+              <div
+                className={`mt-4 transition-opacity ${!autoTurnOff ? "opacity-50" : ""}`}
+              >
+                <TimerInput title="Wait" prop={"autoTurnOffDelay"} />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <TimerSwitch prop="remindTurnOn" title="Remind Turn-On" />
+            <TimerSwitch prop="autoTurnOff" title="Auto Turn-Off" />
+            <div
+              className={`transition-opacity ${!remindTurnOn ? "opacity-50" : ""}`}
+            >
+              <TimerInput title="Wait" prop={"remindTurnOnDelay"} />
+            </div>
+            <div
+              className={`transition-opacity ${!autoTurnOff ? "opacity-50" : ""}`}
+            >
+              <TimerInput title="Wait" prop={"autoTurnOffDelay"} />
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

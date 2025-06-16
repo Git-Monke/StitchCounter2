@@ -12,6 +12,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { HexColorPicker } from "react-colorful";
+import { SidebarTrigger } from "./ui/sidebar";
 
 const ColorPickerPopover = () => {
   const { updateSelectedProject } = useProjects();
@@ -76,20 +77,26 @@ export const AppHeader = () => {
   return (
     <>
       {projectName != null && (
-        <div className="h-16 flex items-end px-16 w-full justify-between">
-          {!renamingProject && (
-            <div className="flex items-center">
-              <div
-                className="w-3 h-3 rounded-full mr-3"
-                style={{
-                  backgroundColor: projectColor,
-                }}
-              />
-              <span className="mr-2">
-                {projectName || "No project selected"}
-              </span>
+        <div className="h-16 flex items-end px-8 md:px-16 w-full justify-between">
+          {/* SidebarTrigger: far left, only on mobile */}
+          <div className="flex items-center flex-1">
+            <div className="md:hidden mr-3">
+              <SidebarTrigger />
             </div>
-          )}
+            {!renamingProject && (
+              <div className="flex items-center">
+                <div
+                  className="w-3 h-3 rounded-full mr-3"
+                  style={{
+                    backgroundColor: projectColor,
+                  }}
+                />
+                <span className="mr-2">
+                  {projectName || "No project selected"}
+                </span>
+              </div>
+            )}
+          </div>
 
           {renamingProject && (
             <div className="flex gap-2 items-center">

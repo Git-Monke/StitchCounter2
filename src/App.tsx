@@ -38,13 +38,13 @@ const AppContent = () => {
       )}
 
       {projectName != null && (
-        <div className="pt-8 px-16 grid grid-rows-[auto_1fr] gap-8 relative">
+        <div className="pt-8 px-8 md:px-16 grid grid-rows-[auto_1fr] gap-8 relative">
           <div className="flex-1 flex flex-col gap-8">
             <ProjectOverview />
             <h3 className="text-sm font-medium text-muted-foreground">
               Project Settings
             </h3>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <CounterSettings />
               <TimerSettings />
             </div>
