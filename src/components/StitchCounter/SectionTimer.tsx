@@ -59,7 +59,7 @@ export const SectionTimer: React.FC = () => {
 
   // Play notification sound
   const playNotificationSound = useCallback(() => {
-    const audio = new Audio("/notification.mp3");
+    const audio = new Audio(import.meta.env.BASE_URL + "notification.mp3");
     audio.play();
   }, []);
 
